@@ -16,10 +16,10 @@ class SpaceShip:
         self.firecount = 0
         self.life = Settings.SHIP_LIVES
     
-    def BlitMe(self):
+    def blit_me(self):
         self.screen.blit(self.image, self.rect)
 
-    def Update(self):
+    def update(self):
         if self.firecount > 0:
             self.firecount -= 1
         self.bullets.update()

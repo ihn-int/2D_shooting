@@ -5,10 +5,10 @@ import random
 
 class Enemy(Sprite):
 
-    def SpeedInit():
+    def speed_init():
         Enemy.speed = 1
 
-    def LevelUp():
+    def level_up():
         Enemy.speed += 0.2
 
     def __init__(self, game):

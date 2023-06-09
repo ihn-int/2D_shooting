@@ -20,52 +20,50 @@ class Game:
         self.clock = pygame.time.Clock()
 
         self.enemies = pygame.sprite.Group()
-        self.spawnTime = 0
+        self.spawn_time = 0
 
         self.status = GameStatus()
-        self.scoreBoard = ScoreBoard(self)
+        self.score_board = ScoreBoard(self)
 
         self.play_button = Button(self, "Play", 60)
-        self.quitButton = Button(self, "Quit", -60)
+        self.quit_button = Button(self, "Quit", -60)
 
-        self.pauseLabel = Label(self, "Pause")
-        self.resumeButton = Button(self, "Resume", 60)
-        self.backToMenuButton  = Button(self, "Back to Menu", -60)
+        self.pause_label = Label(self, "Pause")
+        self.resume_button = Button(self, "Resume", 60)
+        self.back_to_menu_button  = Button(self, "Back to Menu", -60)
 
-        self.gameOverLabel = Label(self, "Game Over")
-        self.newGameButton = Button(self, "New Game", 60)
-        # self.backToMenu  = Button(self, "Back to Menu", -60)
+        self.game_over_label = Label(self, "Game Over")
+        self.new_game_button = Button(self, "New Game", 60)
         
-
         return None
     
-    def RunningCheckEvent(self):
+    def running_check_event(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == Settings.QUIT:
-                    self.status.ChangeStatus(Settings.STATUS_PUASE)
-        self.ship.Update()
+                    self.status.change_status(Settings.STATUS_PUASE)
+        self.ship.update()
         self.enemies.update()
         collisions = pygame.sprite.groupcollide(self.ship.bullets, self.enemies, True, True)
         if collisions:
             for enemy in collisions.values():
                 self.status.score += Settings.ENEMY_SCORE * len(enemy)
-            self.scoreBoard.PrepScore()
+            self.score_board._prep_score()
 
         if pygame.sprite.spritecollideany(self.ship, self.enemies):
-            self.status.OnHit(self)
-            self.scoreBoard.PrepLife()
+            self.status.on_hit(self)
+            self.score_board._prep_life()
             self.enemies.empty()
             del self.ship
             self.ship = SpaceShip(self)
 
 
-    def RunningUpdateScreen(self):
+    def running_update_screen(self):
         self.screen.fill(Settings.BACKGROUND_COLOR)
         
-        self.ship.BlitMe()
+        self.ship.blit_me()
         for bullet in self.ship.bullets:    
             bullet.BlitMe()
 
@@ -73,143 +71,142 @@ class Game:
             if enemy.rect.top > self.screen.get_rect().bottom:
                 self.enemies.remove(enemy)
         self.enemies.draw(self.screen)
-        self.scoreBoard.ShowScore()
+        self.score_board.show_score()
         pygame.display.flip()
         if self.status.score >= self.status.level * Settings.LEVEL_GAP:
             self.status.level += 1
-            self.scoreBoard.PrepLevel()
-            Enemy.LevelUp()
+            self.score_board._prep_level()
+            Enemy.level_up()
 
-    def IdleCheckEvent(self):
+    def idle_check_event(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                self.CheckPlayButton(mouse_pos)
+                self.check_play_button(mouse_pos)
             if event.type == pygame.KEYDOWN:
                 if event.key == Settings.QUIT:
                     pygame.quit()
                 elif event.key == Settings.ENTER:
-                    self.GameInit()
-                    self.status.ChangeStatus(Settings.STAUTS_RUNNING)
-                    self.scoreBoard.PrepScore()
-                    self.scoreBoard.PrepLevel()
-                    self.scoreBoard.PrepLife()
+                    self.game_init()
+                    self.status.change_status(Settings.STAUTS_RUNNING)
+                    self.score_board._prep_score()
+                    self.score_board._prep_level()
+                    self.score_board._prep_life()
 
-    def IdleUpdateScreen(self):
+    def idle_update_screen(self):
         self.screen.fill(Settings.BACKGROUND_COLOR)
-        self.play_button.DrawButton()
-        self.quitButton.DrawButton()
+        self.play_button.draw_button()
+        self.quit_button.draw_button()
         pygame.display.flip()
 
-    def PauseCheckEvent(self):
+    def pause_check_event(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == Settings.ENTER:
-                    self.status.ChangeStatus(Settings.STAUTS_RUNNING)
+                    self.status.change_status(Settings.STAUTS_RUNNING)
                 elif event.key == Settings.QUIT:
-                    self.status.ChangeStatus(Settings.STATUS_IDLE)
+                    self.status.change_status(Settings.STATUS_IDLE)
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                self.CheckPlayButton(mouse_pos)
+                self.check_play_button(mouse_pos)
 
-    def PauseUpdateScreen(self):
-        #self.screen.fill(Settings.BACKGROUND_COLOR)
-        self.pauseLabel.DrawLabel()
-        self.resumeButton.DrawButton()
-        self.backToMenuButton.DrawButton()
+    def pause_update_screen(self):
+        self.pause_label.draw_label()
+        self.resume_button.draw_button()
+        self.back_to_menu_button.draw_button()
         pygame.display.flip()
 
-    def GameOverCheckEvent(self):
+    def game_over_check_event(self):
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 pygame.quit()
             if event.type == pygame.KEYDOWN:
                 if event.key == Settings.QUIT:
-                    self.status.ChangeStatus(Settings.STATUS_IDLE)
+                    self.status.change_status(Settings.STATUS_IDLE)
                 elif event.key == Settings.ENTER:
-                    self.status.ChangeStatus(Settings.STATUS_IDLE)
-                    self.status.ChangeStatus(Settings.STAUTS_RUNNING)
+                    self.status.change_status(Settings.STATUS_IDLE)
+                    self.status.change_status(Settings.STAUTS_RUNNING)
                     
-                    self.scoreBoard.PrepScore()
-                    self.scoreBoard.PrepLevel()
-                    self.scoreBoard.PrepLife()
+                    self.score_board._prep_score()
+                    self.score_board._prep_level()
+                    self.score_board._prep_life()
             if event.type == pygame.MOUSEBUTTONDOWN:
                 mouse_pos = pygame.mouse.get_pos()
-                self.CheckPlayButton(mouse_pos)
+                self.check_play_button(mouse_pos)
     
-    def GameOverUpdateScreen(self):
+    def game_over_update_screen(self):
         self.screen.fill(Settings.BACKGROUND_COLOR)
-        self.gameOverLabel.DrawLabel()
-        self.newGameButton.DrawButton()
-        self.backToMenuButton.DrawButton()
+        self.game_over_label.draw_label()
+        self.new_game_button.draw_button()
+        self.back_to_menu_button.draw_button()
         pygame.display.flip()
 
-    def Update(self):
+    def update(self):
         
         
         while True:
             while self.status.status == Settings.STATUS_IDLE:
                 self.clock.tick(Settings.FPS)
-                self.IdleCheckEvent()
-                self.IdleUpdateScreen()
+                self.idle_check_event()
+                self.idle_update_screen()
 
             while self.status.status == Settings.STAUTS_RUNNING:
                 self.clock.tick(Settings.FPS)
-                self.RunningCheckEvent()
-                self.RunningUpdateScreen()
-                self.CreateEnemy()
+                self.running_check_event()
+                self.running_update_screen()
+                self.create_enemy()
 
             while self.status.status == Settings.STATUS_PUASE:
                 self.clock.tick(Settings.FPS)
-                self.PauseCheckEvent()
-                self.PauseUpdateScreen()
+                self.pause_check_event()
+                self.pause_update_screen()
 
             while self.status.status == Settings.STATUS_GAME_OVER:
                 self.clock.tick(Settings.FPS)
-                self.GameOverCheckEvent()
-                self.GameOverUpdateScreen()
+                self.game_over_check_event()
+                self.game_over_update_screen()
 
-    def CreateEnemy(self):
-        if self.spawnTime > 0:
-            self.spawnTime -= 1
+    def create_enemy(self):
+        if self.spawn_time > 0:
+            self.spawn_time -= 1
         else:
             enemy = Enemy(self)
             self.enemies.add(enemy)
-            self.spawnTime = Settings.ENEMY_SPAWN_TIME
+            self.spawn_time = Settings.ENEMY_SPAWN_TIME
 
-    def GameInit(self):
+    def game_init(self):
         self.enemies.empty()
         self.ship.bullets.empty()
         del self.ship
         self.ship = SpaceShip(self)
-        self.scoreBoard.PrepScore()
-        self.scoreBoard.PrepLevel()
-        self.scoreBoard.PrepLife()
+        self.score_board._prep_score()
+        self.score_board._prep_level()
+        self.score_board._prep_life()
 
-    def CheckPlayButton(self, mouse_pos):
+    def check_play_button(self, mouse_pos):
         if self.status.status == Settings.STATUS_IDLE:
             if self.play_button.rect.collidepoint(mouse_pos):
-                self.status.ChangeStatus(Settings.STAUTS_RUNNING)
-                self.GameInit()
-            elif self.quitButton.rect.collidepoint(mouse_pos):
+                self.status.change_status(Settings.STAUTS_RUNNING)
+                self.game_init()
+            elif self.quit_button.rect.collidepoint(mouse_pos):
                 pygame.quit()
 
         if self.status.status == Settings.STATUS_PUASE:
-            if self.resumeButton.rect.collidepoint(mouse_pos):
-                self.status.ChangeStatus(Settings.STAUTS_RUNNING)
-            elif self.backToMenuButton.rect.collidepoint(mouse_pos):
-                self.status.ChangeStatus(Settings.STATUS_IDLE)
+            if self.resume_button.rect.collidepoint(mouse_pos):
+                self.status.change_status(Settings.STAUTS_RUNNING)
+            elif self.back_to_menu_button.rect.collidepoint(mouse_pos):
+                self.status.change_status(Settings.STATUS_IDLE)
         
         if self.status.status == Settings.STATUS_GAME_OVER:
-            if self.newGameButton.rect.collidepoint(mouse_pos):
-                self.status.ChangeStatus(Settings.STAUTS_RUNNING)
-                self.GameInit()
-            elif self.backToMenuButton.rect.collidepoint(mouse_pos):
-                self.status.ChangeStatus(Settings.STATUS_IDLE)
+            if self.new_game_button.rect.collidepoint(mouse_pos):
+                self.status.change_status(Settings.STAUTS_RUNNING)
+                self.game_init()
+            elif self.back_to_menu_button.rect.collidepoint(mouse_pos):
+                self.status.change_status(Settings.STATUS_IDLE)
             
 
 
@@ -217,4 +214,4 @@ if __name__ == "__main__":
     Settings()
     game = Game()
     game.Start()
-    game.Update()
+    game.update()

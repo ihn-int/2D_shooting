@@ -21,7 +21,7 @@ class Button:
         self.msg_image_rect = self.msg_image.get_rect()
         self.msg_image_rect.center = self.rect.center
 
-    def DrawButton(self):
+    def draw_button(self):
         self.screen.fill(self.button_color, self.rect)
         self.screen.blit(self.msg_image, self.msg_image_rect)
         
@@ -35,11 +35,11 @@ class ScoreBoard:
         self.textColor = Settings.GUI_SCORE_FONT_COLOR
         self.font = pygame.font.SysFont(None, Settings.GUI_SCORE_FONT_SIZE)
 
-        self.PrepScore()
-        self.PrepLevel()
-        self.PrepLife()
+        self._prep_score()
+        self._prep_level()
+        self._prep_life()
 
-    def PrepScore(self):
+    def _prep_score(self):
         scoreText = "{:,}".format(self.status.score)
         self.scoreImage = self.font.render(scoreText, True, self.textColor, Settings.BACKGROUND_COLOR)
 
@@ -47,7 +47,7 @@ class ScoreBoard:
         self.scoreRect.right = self.screen_rect.right - 20
         self.scoreRect.top = 20
 
-    def PrepLevel(self):
+    def _prep_level(self):
         levelText = "Level: " + str(self.status.level)
         self.levelImage = self.font.render(levelText, True, self.textColor, Settings.BACKGROUND_COLOR)
 
@@ -55,7 +55,7 @@ class ScoreBoard:
         self.levelRect.right = self.scoreRect.right
         self.levelRect.top = self.scoreRect.bottom + 10
 
-    def PrepLife(self):
+    def _prep_life(self):
         lifeText = "Life: " + str(self.status.shipLives)
         self.lifeImage = self.font.render(lifeText, True, self.textColor, Settings.BACKGROUND_COLOR)
 
@@ -63,7 +63,7 @@ class ScoreBoard:
         self.lifeRect.right = self.scoreRect.right
         self.lifeRect.top = self.levelRect.bottom + 10
 
-    def ShowScore(self):
+    def show_score(self):
         self.screen.blit(self.scoreImage, self.scoreRect)
         self.screen.blit(self.levelImage, self.levelRect)
         self.screen.blit(self.lifeImage, self.lifeRect)
@@ -86,5 +86,5 @@ class Label:
         self.labelRect.center = self.screen.get_rect().center
         self.labelRect.y -= 150
     
-    def DrawLabel(self):
+    def draw_label(self):
         self.screen.blit(self.labelImage, self.labelRect)
