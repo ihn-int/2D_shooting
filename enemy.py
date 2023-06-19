@@ -11,16 +11,13 @@ class Enemy(Sprite):
     def level_up():
         Enemy.speed += 0.2
 
-    def __init__(self, game):
+    def __init__(self):
         super().__init__()
-        self.screen = game.screen
-
         self.image = pygame.image.load("enemy.bmp")
         self.rect = self.image.get_rect()
 
-        self.rect.x = random.randrange(Settings.ENEMY_BOARD, self.screen.get_rect().width - self.rect.width - Settings.ENEMY_BOARD)
+        self.rect.x = random.randrange(Settings.ENEMY_BOARD, Settings.SCREEN_WIDTH - self.rect.width - Settings.ENEMY_BOARD)
         self.rect.y = self.rect.height
-
 
     def update(self):
         self.rect.y += Settings.ENEMY_SPEED * Enemy.speed

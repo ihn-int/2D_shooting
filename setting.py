@@ -5,6 +5,7 @@ class Settings():
 
         Settings.SCREEN_WIDTH = 800
         Settings.SCREEN_HEIGHT = 600
+        Settings.SCREEN_BOARD = 10
         Settings.BACKGROUND_COLOR = (230, 230, 230)
         Settings.FPS = 60
         Settings.STATUS_IDLE = "IDLE"
@@ -38,11 +39,17 @@ class Settings():
         Settings.ENEMY_BOARD = 10
         Settings.ENEMY_SCORE = 100
 
-        Settings.GUI_BUTTOM_WIDTH = 250
-        Settings.GUI_BUTTOM_HEIGHT = 50
-        Settings.GUI_BUTTOM_COLOR = (20, 200, 20)
-        Settings.GUI_BUTTOM_TEXT_COLOR = (255, 255, 255)
-        Settings.GUI_BUTTOM_FONT_SIZE = 48
+        Settings.GUI_TOPLEFT = "TOPLEFT"
+        Settings.GUI_TOPRIGHT = "TOPRIGHT"
+        Settings.GUI_BOTTOMLEFT = "BOTTOMLEFT"
+        Settings.GUI_BOTTOMRIGHT = "BOTTOMRIGHT"
+        Settings.GUI_CENTER = "CENTER"
+
+        Settings.GUI_BUTTON_WIDTH = 250
+        Settings.GUI_BUTTON_HEIGHT = 50
+        Settings.GUI_BUTTON_COLOR = (20, 200, 20)
+        Settings.GUI_BUTTON_TEXT_COLOR = (255, 255, 255)
+        Settings.GUI_BUTTON_FONT_SIZE = 48
 
         Settings.GUI_SCORE_FONT_COLOR = (30, 30, 30)
         Settings.GUI_SCORE_FONT_SIZE = 48

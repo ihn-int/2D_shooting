@@ -1,90 +1,81 @@
 import pygame.font
 from setting import Settings
+
+Settings()
+
+class Canva:
+
+    def __init__(self):
+        pass
+
+    def update(self):
+        pass
+
+    def blit_on(self, screen):
+        pass
+
+
 class Button:
 
-    def __init__(self, game, msg, deltaY) -> None:
-        self.screen = game.screen
-        self.screen_rect = self.screen.get_rect()
-
-        self.width, self.height = Settings.GUI_BUTTOM_WIDTH, Settings.GUI_BUTTOM_HEIGHT
-        self.button_color = Settings.GUI_BUTTOM_COLOR
-        self.text_color = Settings.GUI_BUTTOM_TEXT_COLOR
-        self.font = pygame.font.SysFont(None, Settings.GUI_BUTTOM_FONT_SIZE)
-
-        self.rect = pygame.Rect(0, 0, self.width, self.height)
-        self.rect.center = self.screen_rect.center
-        self.rect.y -= deltaY
+    def __init__(self, msg, scale, pos, anchor,
+                  button_color = Settings.GUI_BUTTON_COLOR,
+                  text_color = Settings.GUI_BUTTON_TEXT_COLOR,
+                  font_size = Settings.GUI_BUTTON_FONT_SIZE):
+        self.button_color = button_color
+        self.text_color = text_color
+        self.anchor = anchor
+        self.pos = pos
+        self.font = pygame.font.SysFont(None, font_size)
+        self.image = pygame.Surface(scale)
+        self.rect = self.image.get_rect()
         self._prep_msg(msg)
 
     def _prep_msg(self, msg):
+        self.image.fill(self.button_color)
         self.msg_image = self.font.render(msg, True, self.text_color, self.button_color)
         self.msg_image_rect = self.msg_image.get_rect()
-        self.msg_image_rect.center = self.rect.center
+        self.msg_image_rect.centerx = self.rect.width / 2
+        self.msg_image_rect.centery = self.rect.height / 2
+        if self.anchor == Settings.GUI_TOPLEFT:
+            self.rect.topleft = self.pos
+        elif self.anchor == Settings.GUI_TOPRIGHT:
+            self.rect.topright = self.pos
+        elif self.anchor == Settings.GUI_BOTTOMLEFT:
+            self.rect.bottomleft = self.pos
+        elif self.anchor == Settings.GUI_BOTTOMRIGHT:
+            self.rect.bottomright = self.pos
+        elif self.anchor == Settings.GUI_CENTER:
+            self.rect.center = self.pos
+        self.image.blit(self.msg_image, self.msg_image_rect)
 
-    def draw_button(self):
-        self.screen.fill(self.button_color, self.rect)
-        self.screen.blit(self.msg_image, self.msg_image_rect)
-        
-class ScoreBoard:
-    
-    def __init__(self, game) -> None:
-        self.screen = game.screen
-        self.screen_rect = self.screen.get_rect()
-        self.status = game.status
+    def is_click(self, mouse_action) -> bool:
+        if mouse_action[0] and self.rect.collidepoint(mouse_action[1]):
+            return True
 
-        self.textColor = Settings.GUI_SCORE_FONT_COLOR
-        self.font = pygame.font.SysFont(None, Settings.GUI_SCORE_FONT_SIZE)
-
-        self._prep_score()
-        self._prep_level()
-        self._prep_life()
-
-    def _prep_score(self):
-        scoreText = "{:,}".format(self.status.score)
-        self.scoreImage = self.font.render(scoreText, True, self.textColor, Settings.BACKGROUND_COLOR)
-
-        self.scoreRect = self.scoreImage.get_rect()
-        self.scoreRect.right = self.screen_rect.right - 20
-        self.scoreRect.top = 20
-
-    def _prep_level(self):
-        levelText = "Level: " + str(self.status.level)
-        self.levelImage = self.font.render(levelText, True, self.textColor, Settings.BACKGROUND_COLOR)
-
-        self.levelRect = self.levelImage.get_rect()
-        self.levelRect.right = self.scoreRect.right
-        self.levelRect.top = self.scoreRect.bottom + 10
-
-    def _prep_life(self):
-        lifeText = "Life: " + str(self.status.shipLives)
-        self.lifeImage = self.font.render(lifeText, True, self.textColor, Settings.BACKGROUND_COLOR)
-
-        self.lifeRect = self.lifeImage.get_rect()
-        self.lifeRect.right = self.scoreRect.right
-        self.lifeRect.top = self.levelRect.bottom + 10
-
-    def show_score(self):
-        self.screen.blit(self.scoreImage, self.scoreRect)
-        self.screen.blit(self.levelImage, self.levelRect)
-        self.screen.blit(self.lifeImage, self.lifeRect)
 
 class Label:
 
-    def __init__(self, game, msg):
-        self.screen = game.screen
-        self.screen_rect = self.screen.get_rect()
-        self.labelText = msg
-        self.textColor = Settings.GUI_SCORE_FONT_COLOR
-        self.font = pygame.font.SysFont(None, Settings.GUI_LABEL_FONT_SIZE)
+    def __init__(self, msg, pos, anchor,
+                text_color = Settings.GUI_SCORE_FONT_COLOR,
+                font_size = Settings.GUI_LABEL_FONT_SIZE):
+        self.msg = msg
+        self.text_color = text_color
+        self.pos = pos
+        self.anchor = anchor
+        self.font = pygame.font.SysFont(None, font_size)
+        self._prep_label()
 
-        self.PrepLabel()
-
-    def PrepLabel(self):
-        self.labelImage = self.font.render(self.labelText, True, self.textColor, Settings.BACKGROUND_COLOR)
-
-        self.labelRect = self.labelImage.get_rect()
-        self.labelRect.center = self.screen.get_rect().center
-        self.labelRect.y -= 150
+    def _prep_label(self):
+        self.image = self.font.render(self.msg, True, self.text_color, Settings.BACKGROUND_COLOR)
+        self.rect = self.image.get_rect()
+        if self.anchor == Settings.GUI_TOPLEFT:
+            self.rect.topleft = self.pos
+        elif self.anchor == Settings.GUI_TOPRIGHT:
+            self.rect.topright = self.pos
+        elif self.anchor == Settings.GUI_BOTTOMLEFT:
+            self.rect.bottomleft = self.pos
+        elif self.anchor == Settings.GUI_BOTTOMRIGHT:
+            self.rect.bottomright = self.pos
+        elif self.anchor ==Settings.GUI_CENTER:
+            self.rect.center = self.pos
     
-    def draw_label(self):
-        self.screen.blit(self.labelImage, self.labelRect)

@@ -3,21 +3,16 @@ from setting import Settings
 from bullet import Bullet
 
 class SpaceShip:
-    def __init__(self, game) -> None:
+    def __init__(self, pos = (400, 500)) -> None:
         self.image = pygame.image.load(".\\spaceship.bmp")
-        self.screen = game.screen
-        self.screen_rect = game.screen.get_rect()
         self.rect = self.image.get_rect()
-        self.rect.midbottom = self.screen_rect.midbottom
-
+        self.rect.center = pos
         self.bullets = pygame.sprite.Group()
 
         self.speed = Settings.SHIP_SPEED
         self.firecount = 0
         self.life = Settings.SHIP_LIVES
     
-    def blit_me(self):
-        self.screen.blit(self.image, self.rect)
 
     def update(self):
         if self.firecount > 0:
@@ -34,19 +29,19 @@ class SpaceShip:
         else:
             self.speed = Settings.SHIP_SPEED
 
-        if self.keypress[Settings.RIGHT] and self.rect.right < self.screen_rect.right:
+        if self.keypress[Settings.RIGHT] and self.rect.right < Settings.SCREEN_WIDTH - Settings.SCREEN_BOARD:
             self.rect.x += self.speed
             
-        if self.keypress[Settings.LEFT] and self.rect.left > 0:
+        if self.keypress[Settings.LEFT] and self.rect.left > Settings.SCREEN_BOARD:
             self.rect.x -= self.speed
 
         if self.keypress[Settings.UP] and self.rect.top > 0:
             self.rect.y -= self.speed
 
-        if self.keypress[Settings.DOWN] and self.rect.bottom < self.screen_rect.bottom:
+        if self.keypress[Settings.DOWN] and self.rect.bottom < Settings.SCREEN_HEIGHT - Settings.SCREEN_BOARD:
             self.rect.y += self.speed
 
         if self.keypress[Settings.FIRE] and self.firecount == 0:
-            bullet = Bullet(self)
+            bullet = Bullet(self.rect)
             self.bullets.add(bullet)
             self.firecount = Settings.SHIP_COOLDOWN

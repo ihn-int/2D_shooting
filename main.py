@@ -1,217 +1,238 @@
+#==========================================================
+# initialize
+
 import pygame
 from setting import Settings
+from scene import Scene
+from GUI import *
 from ship import SpaceShip
 from enemy import Enemy
-from record import GameStatus
-from GUI import *
+pygame.init()
+Settings()
+Enemy.speed_init()
 
-class Game:
-    def __init__(self) -> None:
-        return None
-    
-    def Start(self):
-        pygame.init()
-
-        self.screen = pygame.display.set_mode((Settings.SCREEN_WIDTH, Settings.SCREEN_HEIGHT))
-        pygame.display.set_caption("咻咻碰碰碰")
-        self.screen.fill(Settings.BACKGROUND_COLOR)
-
-        self.ship = SpaceShip(self)
-        self.clock = pygame.time.Clock()
-
-        self.enemies = pygame.sprite.Group()
-        self.spawn_time = 0
-
-        self.status = GameStatus()
-        self.score_board = ScoreBoard(self)
-
-        self.play_button = Button(self, "Play", 60)
-        self.quit_button = Button(self, "Quit", -60)
-
-        self.pause_label = Label(self, "Pause")
-        self.resume_button = Button(self, "Resume", 60)
-        self.back_to_menu_button  = Button(self, "Back to Menu", -60)
-
-        self.game_over_label = Label(self, "Game Over")
-        self.new_game_button = Button(self, "New Game", 60)
-        
-        return None
-    
-    def running_check_event(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == Settings.QUIT:
-                    self.status.change_status(Settings.STATUS_PUASE)
-        self.ship.update()
-        self.enemies.update()
-        collisions = pygame.sprite.groupcollide(self.ship.bullets, self.enemies, True, True)
-        if collisions:
-            for enemy in collisions.values():
-                self.status.score += Settings.ENEMY_SCORE * len(enemy)
-            self.score_board._prep_score()
-
-        if pygame.sprite.spritecollideany(self.ship, self.enemies):
-            self.status.on_hit(self)
-            self.score_board._prep_life()
-            self.enemies.empty()
-            del self.ship
-            self.ship = SpaceShip(self)
+clock = pygame.time.Clock()
+screen = pygame.display.set_mode((Settings.SCREEN_WIDTH, Settings.SCREEN_HEIGHT))
+Scene.running_scene = None
 
 
-    def running_update_screen(self):
-        self.screen.fill(Settings.BACKGROUND_COLOR)
-        
-        self.ship.blit_me()
-        for bullet in self.ship.bullets:    
-            bullet.BlitMe()
+#==========================================================
+#==========================================================
+# start scene( idle scene )
 
-        for enemy in self.enemies:
-            if enemy.rect.top > self.screen.get_rect().bottom:
-                self.enemies.remove(enemy)
-        self.enemies.draw(self.screen)
-        self.score_board.show_score()
-        pygame.display.flip()
-        if self.status.score >= self.status.level * Settings.LEVEL_GAP:
-            self.status.level += 1
-            self.score_board._prep_level()
-            Enemy.level_up()
+start_scene = Scene("Start")
+start_scene.canva = Canva()
 
-    def idle_check_event(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                self.check_play_button(mouse_pos)
-            if event.type == pygame.KEYDOWN:
-                if event.key == Settings.QUIT:
-                    pygame.quit()
-                elif event.key == Settings.ENTER:
-                    self.game_init()
-                    self.status.change_status(Settings.STAUTS_RUNNING)
-                    self.score_board._prep_score()
-                    self.score_board._prep_level()
-                    self.score_board._prep_life()
+start_scene.canva.play_button = Button("Play", (200, 50), (400, 250), Settings.GUI_CENTER)
+start_scene.canva.quit_button = Button("Quit", (200, 50), (400, 350), Settings.GUI_CENTER)
 
-    def idle_update_screen(self):
-        self.screen.fill(Settings.BACKGROUND_COLOR)
-        self.play_button.draw_button()
-        self.quit_button.draw_button()
-        pygame.display.flip()
+def start_scene_canva_update(canva, mouse_action):
+    if canva.play_button.is_click(mouse_action):
+        Scene.change_scene(game_scene)
+        game_scene.init(game_scene, True)
+        return True
+    elif canva.quit_button.is_click(mouse_action):
+        print("QUIT")
+        pygame.quit()
+    return False
 
-    def pause_check_event(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == Settings.ENTER:
-                    self.status.change_status(Settings.STAUTS_RUNNING)
-                elif event.key == Settings.QUIT:
-                    self.status.change_status(Settings.STATUS_IDLE)
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                self.check_play_button(mouse_pos)
+def start_scene_canva_blit_on(canva, screen):
+    screen.blit(canva.play_button.image, canva.play_button.rect)
+    screen.blit(canva.quit_button.image, canva.quit_button.rect)
 
-    def pause_update_screen(self):
-        self.pause_label.draw_label()
-        self.resume_button.draw_button()
-        self.back_to_menu_button.draw_button()
-        pygame.display.flip()
+def start_scene_update(self, mouse_action):
+    return self.canva.update(self.canva, mouse_action)
 
-    def game_over_check_event(self):
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                pygame.quit()
-            if event.type == pygame.KEYDOWN:
-                if event.key == Settings.QUIT:
-                    self.status.change_status(Settings.STATUS_IDLE)
-                elif event.key == Settings.ENTER:
-                    self.status.change_status(Settings.STATUS_IDLE)
-                    self.status.change_status(Settings.STAUTS_RUNNING)
-                    
-                    self.score_board._prep_score()
-                    self.score_board._prep_level()
-                    self.score_board._prep_life()
-            if event.type == pygame.MOUSEBUTTONDOWN:
-                mouse_pos = pygame.mouse.get_pos()
-                self.check_play_button(mouse_pos)
-    
-    def game_over_update_screen(self):
-        self.screen.fill(Settings.BACKGROUND_COLOR)
-        self.game_over_label.draw_label()
-        self.new_game_button.draw_button()
-        self.back_to_menu_button.draw_button()
-        pygame.display.flip()
+def start_scene_blit_on(self, screen):
+    screen.fill(Settings.BACKGROUND_COLOR)
+    self.canva.blit_on(self.canva, screen)
 
-    def update(self):
-        
-        
-        while True:
-            while self.status.status == Settings.STATUS_IDLE:
-                self.clock.tick(Settings.FPS)
-                self.idle_check_event()
-                self.idle_update_screen()
 
-            while self.status.status == Settings.STAUTS_RUNNING:
-                self.clock.tick(Settings.FPS)
-                self.running_check_event()
-                self.running_update_screen()
-                self.create_enemy()
+start_scene.canva.update = start_scene_canva_update
+start_scene.canva.blit_on = start_scene_canva_blit_on
+start_scene.update = start_scene_update
+start_scene.blit_on = start_scene_blit_on
 
-            while self.status.status == Settings.STATUS_PUASE:
-                self.clock.tick(Settings.FPS)
-                self.pause_check_event()
-                self.pause_update_screen()
+#==========================================================
+#==========================================================
+# game scene
 
-            while self.status.status == Settings.STATUS_GAME_OVER:
-                self.clock.tick(Settings.FPS)
-                self.game_over_check_event()
-                self.game_over_update_screen()
+game_scene = Scene("Game")
+game_scene_canva = Canva()
+game_scene_canva.score_board = Label("score:", (790, 10), Settings.GUI_TOPRIGHT)
+game_scene_canva.level_board = Label("level: ", (790, 70), Settings.GUI_TOPRIGHT)
+game_scene_canva.lives_bar = Label("lives:", (790, 130), Settings.GUI_TOPRIGHT)
+game_scene.score = 0
+game_scene.lives = 3
+game_scene.level = 1
+game_scene.ship = SpaceShip()
+game_scene.ship.rect.center = (400, 500)
+game_scene.enemies = pygame.sprite.Group()
+game_scene.spawn_time = Settings.ENEMY_SPAWN_TIME
+game_scene.is_running = True
+game_scene.canva = game_scene_canva
 
-    def create_enemy(self):
-        if self.spawn_time > 0:
-            self.spawn_time -= 1
-        else:
-            enemy = Enemy(self)
-            self.enemies.add(enemy)
-            self.spawn_time = Settings.ENEMY_SPAWN_TIME
-
-    def game_init(self):
-        self.enemies.empty()
-        self.ship.bullets.empty()
+def game_scene_init(self, is_clear):
+    if is_clear:
+        self.lives = 3
+        self.level = 1
+        self.score = 0
+    if self.ship:
         del self.ship
-        self.ship = SpaceShip(self)
-        self.score_board._prep_score()
-        self.score_board._prep_level()
-        self.score_board._prep_life()
+    self.ship = SpaceShip()
+    self.ship.rect.center = (400, 500)
+    self.enemies.empty()
 
-    def check_play_button(self, mouse_pos):
-        if self.status.status == Settings.STATUS_IDLE:
-            if self.play_button.rect.collidepoint(mouse_pos):
-                self.status.change_status(Settings.STAUTS_RUNNING)
-                self.game_init()
-            elif self.quit_button.rect.collidepoint(mouse_pos):
-                pygame.quit()
+def create_enemy(self):
+    if self.spawn_time > 0:
+        self.spawn_time -= 1
+    else:
+        enemy = Enemy()
+        self.enemies.add(enemy)
+        self.spawn_time = Settings.ENEMY_SPAWN_TIME
 
-        if self.status.status == Settings.STATUS_PUASE:
-            if self.resume_button.rect.collidepoint(mouse_pos):
-                self.status.change_status(Settings.STAUTS_RUNNING)
-            elif self.back_to_menu_button.rect.collidepoint(mouse_pos):
-                self.status.change_status(Settings.STATUS_IDLE)
-        
-        if self.status.status == Settings.STATUS_GAME_OVER:
-            if self.new_game_button.rect.collidepoint(mouse_pos):
-                self.status.change_status(Settings.STAUTS_RUNNING)
-                self.game_init()
-            elif self.back_to_menu_button.rect.collidepoint(mouse_pos):
-                self.status.change_status(Settings.STATUS_IDLE)
-            
+def on_hit(self):
+    self.lives -= 1
+    if self.lives <= 0:
+        print("Game Over")
+        Scene.change_scene(gameover_scene)
+    self.init(self, False)
+
+def game_scene_canva_update(self, mouse_action, score, level, lives):
+    _score_board = self.score_board
+    _level_board = self.level_board
+    _lives_bar = self.lives_bar
+    _score_board.msg = "score: " + str(score)
+    _level_board.msg = "level: " + str(level)
+    _lives_bar.msg = "lives: " + str(lives)
+    _score_board._prep_label()
+    _level_board._prep_label()
+    _lives_bar._prep_label()
+
+def game_scene_canva_blit_on(self, screen):
+    _score_board = self.score_board
+    _level_board = self.level_board
+    _lives_bar = self.lives_bar
+    screen.blit(_score_board.image, _score_board.rect)
+    screen.blit(_level_board.image, _level_board.rect)
+    screen.blit(_lives_bar.image, _lives_bar.rect)
+    if pygame.key.get_pressed()[Settings.QUIT]:
+        Scene.change_scene(pause_scene)
+        return True
+    return False
+
+def game_scene_update(self, mouse_action):
+    self.create_enemies(self)
+    self.ship.update()
+    self.enemies.update()
+    for enemy in self.enemies:
+        if enemy.rect.top > Settings.SCREEN_HEIGHT:
+            self.enemies.remove(enemy)
+    collisions = pygame.sprite.groupcollide(self.ship.bullets, self.enemies, True, True)
+    if collisions:
+        self.score += Settings.ENEMY_SCORE
+        self.canva.score_board._prep_label()
+    if pygame.sprite.spritecollideany(self.ship, self.enemies):
+        self.on_hit(self)
+    if self.score >= self.level * Settings.LEVEL_GAP:
+        self.level += 1
+        Enemy.level_up()
+    return self.canva.update(self.canva, mouse_action, self.score, self.level, self.lives)
+
+def game_scene_blit_on(self, screen):
+    screen.fill(Settings.BACKGROUND_COLOR)
+    screen.blit(self.ship.image, self.ship.rect)
+    self.ship.bullets.draw(screen)
+    self.enemies.draw(screen)
+    self.canva.blit_on(self.canva, screen)
+
+game_scene_canva.update = game_scene_canva_update
+game_scene_canva.blit_on = game_scene_canva_blit_on
+game_scene.update = game_scene_update
+game_scene.blit_on = game_scene_blit_on
+game_scene.create_enemies = create_enemy
+game_scene.on_hit = on_hit
+game_scene.init = game_scene_init
+
+#==========================================================
+#==========================================================
+# pause scene
+
+pause_scene = Scene("Pause")
+pause_scene_canva = Canva()
+pause_scene_canva.resume_button = Button("Resume", (200, 50), (400, 250), Settings.GUI_CENTER)
+pause_scene_canva.menu_button = Button("Menu", (200, 50), (400, 350), Settings.GUI_CENTER)
+pause_scene.canva = pause_scene_canva
 
 
-if __name__ == "__main__":
-    Settings()
-    game = Game()
-    game.Start()
-    game.update()
+def pause_scene_canva_update(self, mouse_action):
+    if self.resume_button.is_click(mouse_action):
+        Scene.change_scene(game_scene)
+        return True
+    if self.menu_button.is_click(mouse_action):
+        Scene.change_scene(start_scene)
+        return True
+    return False
+
+def pause_scene_canva_blit_on(self, screen):
+    screen.blit(self.resume_button.image, self.resume_button.rect)
+    screen.blit(self.menu_button.image, self.menu_button.rect)
+
+def pause_scene_update(self, mouse_action):
+    return self.canva.update(self.canva, mouse_action)
+
+def pause_scene_blit_on(self, screen):
+    self.canva.blit_on(self.canva, screen)
+
+pause_scene.canva.update = pause_scene_canva_update
+pause_scene.canva.blit_on = pause_scene_canva_blit_on
+pause_scene.update = pause_scene_update
+pause_scene.blit_on = pause_scene_blit_on
+
+#==========================================================
+#==========================================================
+# game over scene
+
+gameover_scene = Scene("Game Over")
+gameover_scene_canva = Canva()
+gameover_scene_canva.retry_button = Button("Retry", (200, 50), (400, 250), Settings.GUI_CENTER)
+gameover_scene_canva.menu_button = Button("Menu", (200, 50), (400, 350), Settings.GUI_CENTER)
+gameover_scene_canva.gameover_label = Label("Game Over!!!", (400, 100), Settings.GUI_CENTER)
+
+def gameover_scene_canva_update(self, mouse_action):
+    if self.retry_button.is_click(mouse_action):
+        game_scene.init(game_scene, True)
+        Scene.change_scene(game_scene)
+    if self.menu_button.is_click(mouse_action):
+        Scene.change_scene(start_scene)
+
+def gameover_scene_canva_blit_on(self, screen):
+    screen.blit(self.retry_button.image, self.retry_button.rect)
+    screen.blit(self.menu_button.image, self.menu_button.rect)
+    screen.blit(self.gameover_label.image, self.gameover_label.rect)
+
+def gameover_scene_update(self, mouse_action):
+    return self.canva.update(self.canva, mouse_action)
+
+def gameover_scene_blit_on(self, screen):
+    self.canva.blit_on(self.canva, screen)
+
+gameover_scene.canva = gameover_scene_canva
+gameover_scene.canva.update = gameover_scene_canva_update
+gameover_scene.canva.blit_on = gameover_scene_canva_blit_on
+gameover_scene.update = gameover_scene_update
+gameover_scene.blit_on = gameover_scene_blit_on
+
+#==========================================================
+#==========================================================
+# scene running
+
+Scene.change_scene(start_scene)
+
+while True:
+    clock.tick(Settings.FPS)
+    _mouse_action = Scene.running_scene.check_event()
+    Scene.running_scene.update(Scene.running_scene, _mouse_action)
+    Scene.running_scene.blit_on(Scene.running_scene, screen)
+
+    pygame.display.flip()
