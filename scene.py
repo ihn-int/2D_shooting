@@ -5,7 +5,7 @@ class Scene:
 
     def __init__(self, scene_name) -> None:
         self.tag = scene_name
-        self.canva = None
+        self.canvas = None
 
     def change_scene(next_scene):
         Scene.running_scene = next_scene

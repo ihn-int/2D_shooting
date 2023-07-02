@@ -3,7 +3,7 @@ from setting import Settings
 
 Settings()
 
-class Canva:
+class Canvas:
 
     def __init__(self):
         pass
