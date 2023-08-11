@@ -1,17 +1,17 @@
-import pygame
-from setting import Settings
-from bullet import Bullet
+import pygame                   # 引用 pygame 模組
+from setting import Settings    # 從 setting 模組中引用 Settings 類別
+from bullet import Bullet       # 從 bullet 模組中引用 Bullet 類別
 
-class SpaceShip:
-    def __init__(self, pos = (400, 500)) -> None:
-        self.image = pygame.image.load(".\\spaceship.bmp")
-        self.rect = self.image.get_rect()
-        self.rect.center = pos
-        self.bullets = pygame.sprite.Group()
+class SpaceShip:                # 定義 Spaceship 類別
 
-        self.speed = Settings.SHIP_SPEED
-        self.firecount = 0
-        self.life = Settings.SHIP_LIVES
+    def __init__(self, pos = (400, 500)) -> None:           # 定義建構函式
+        self.image = pygame.image.load("spaceship.bmp")     # 載入 spaceship.bmp 作為 image 屬性
+        self.rect = self.image.get_rect()                   # 宣告 rect 屬性為 image 的 rect 屬性
+        self.rect.center = pos                  # 將 rect 的 center 設定為 pos，預設為 (400, 500)
+        self.bullets = pygame.sprite.Group()    # 宣告 bullets 為 Group 物件，儲存發射的子彈
+        self.speed = Settings.SHIP_SPEED        # 宣告 speed 屬性為 SHIP_SPEED，代表自機移動速度
+        self.firecount = 0                      # 宣告 firecount 變數，代表開火冷卻時間
+        self.life = Settings.SHIP_LIVES         # 宣告 life 屬性
     
 
     def update(self):

@@ -1,81 +1,85 @@
-import pygame.font
-from setting import Settings
+import pygame.font              # 引用 pygame.font 模組
+from setting import Settings    # 從 setting 模組中調用 Settings 類別
 
-Settings()
+Settings()                      # 調用 Settings 類別的初始化函式
 
-class Canvas:
+class Canvas:                   # 定義 Canvas 類別
 
-    def __init__(self):
-        pass
+    def __init__(self):         # 定義建構函式
+        pass                    # pass
 
-    def update(self):
-        pass
+    def update(self):           # 定義更新函式
+        pass                    # pass
 
-    def blit_on(self, screen):
-        pass
+    def blit_on(self, screen):  # 定義繪製函式
+        pass                    # pass
 
 
-class Button:
+class Button:                   # 定義 Button 類別
 
     def __init__(self, msg, scale, pos, anchor,
                   button_color = Settings.GUI_BUTTON_COLOR,
                   text_color = Settings.GUI_BUTTON_TEXT_COLOR,
-                  font_size = Settings.GUI_BUTTON_FONT_SIZE):
-        self.button_color = button_color
-        self.text_color = text_color
-        self.anchor = anchor
-        self.pos = pos
-        self.font = pygame.font.SysFont(None, font_size)
-        self.image = pygame.Surface(scale)
-        self.rect = self.image.get_rect()
-        self._prep_msg(msg)
+                  font_size = Settings.GUI_BUTTON_FONT_SIZE):   # 定義建構函式
+        self.button_color = button_color                        # 設定按鈕底色
+        self.text_color = text_color                            # 設定文字顏色
+        self.anchor = anchor                                    # 設定錨點
+        self.pos = pos                                          # 設定位置
+        self.font = pygame.font.SysFont(None, font_size)        # 宣告 font 屬性為 SysFont 物件
+        self.image = pygame.Surface(scale)                      # 宣告 image 屬性為 Surface 物件
+        self.rect = self.image.get_rect()                       # 宣告 rect 屬性為 image 的 rect
+        self._prep_msg(msg)                                     # 調用渲染按鈕的函式
 
-    def _prep_msg(self, msg):
-        self.image.fill(self.button_color)
+    def _prep_msg(self, msg):                                   # 定義用於渲染按鈕的函式
+        self.image.fill(self.button_color)                      # 將 image 填滿顏色
         self.msg_image = self.font.render(msg, True, self.text_color, self.button_color)
-        self.msg_image_rect = self.msg_image.get_rect()
-        self.msg_image_rect.centerx = self.rect.width / 2
-        self.msg_image_rect.centery = self.rect.height / 2
-        if self.anchor == Settings.GUI_TOPLEFT:
-            self.rect.topleft = self.pos
-        elif self.anchor == Settings.GUI_TOPRIGHT:
-            self.rect.topright = self.pos
-        elif self.anchor == Settings.GUI_BOTTOMLEFT:
-            self.rect.bottomleft = self.pos
-        elif self.anchor == Settings.GUI_BOTTOMRIGHT:
-            self.rect.bottomright = self.pos
-        elif self.anchor == Settings.GUI_CENTER:
-            self.rect.center = self.pos
-        self.image.blit(self.msg_image, self.msg_image_rect)
+                                                            # 宣告 msg_image 屬性為文字的 Surface
+        self.msg_image_rect = self.msg_image.get_rect()     # 宣告 msg_image_rect 屬性
+        self.msg_image_rect.centerx = self.rect.width / 2   # 將文字置中
+        self.msg_image_rect.centery = self.rect.height / 2  # 將文字置中
+        if self.anchor == Settings.GUI_TOPLEFT:             # 如果錨點位於左上角
+            self.rect.topleft = self.pos                    # 就將錨點移到指定位置
+        elif self.anchor == Settings.GUI_TOPRIGHT:          # 如果錨點位於右上角
+            self.rect.topright = self.pos                   # 就將錨點移到指定位置
+        elif self.anchor == Settings.GUI_BOTTOMLEFT:        # 如果錨點位於左下角
+            self.rect.bottomleft = self.pos                 # 就將錨點移到指定位置
+        elif self.anchor == Settings.GUI_BOTTOMRIGHT:       # 如果錨點位於右下角
+            self.rect.bottomright = self.pos                # 就將錨點移到指定位置
+        elif self.anchor == Settings.GUI_CENTER:            # 如果錨點位於中心
+            self.rect.center = self.pos                     # 就將錨點移到指定位置
+        self.image.blit(self.msg_image, self.msg_image_rect)# 將 msg_image 繪製到 image 上
 
-    def is_click(self, mouse_action) -> bool:
+    def is_click(self, mouse_action) -> bool:   # 定義按鈕被按下的函式
         if mouse_action[0] and self.rect.collidepoint(mouse_action[1]):
-            return True
+                                                # 如果滑鼠有被按下，且滑鼠位置位於 rect 中
+            return True                         # 回傳 True
 
 
-class Label:
+class Label:                            # 定義 Label 類別
 
     def __init__(self, msg, pos, anchor,
                 text_color = Settings.GUI_SCORE_FONT_COLOR,
                 font_size = Settings.GUI_LABEL_FONT_SIZE):
-        self.msg = msg
-        self.text_color = text_color
-        self.pos = pos
-        self.anchor = anchor
+                                        # 定義建構函式
+        self.msg = msg                  # 設定文字
+        self.text_color = text_color    # 設定文字顏色
+        self.pos = pos                  # 設定位置
+        self.anchor = anchor            # 設定錨點
         self.font = pygame.font.SysFont(None, font_size)
-        self._prep_label()
+                                        # 宣告 font 屬性為 SysFont 物件
+        self._prep_label()              # 調用渲染標籤的函式
 
-    def _prep_label(self):
-        self.image = self.font.render(self.msg, True, self.text_color, Settings.BACKGROUND_COLOR)
-        self.rect = self.image.get_rect()
-        if self.anchor == Settings.GUI_TOPLEFT:
-            self.rect.topleft = self.pos
-        elif self.anchor == Settings.GUI_TOPRIGHT:
-            self.rect.topright = self.pos
-        elif self.anchor == Settings.GUI_BOTTOMLEFT:
-            self.rect.bottomleft = self.pos
-        elif self.anchor == Settings.GUI_BOTTOMRIGHT:
-            self.rect.bottomright = self.pos
-        elif self.anchor ==Settings.GUI_CENTER:
-            self.rect.center = self.pos
+    def _prep_label(self):                              # 定義渲染標籤的函式
+        self.image = self.font.render(self.msg, True, self.text_color, Settings.BACKGROUND_COLOR)                               # 宣告 image 屬性為文字的 Surface
+        self.rect = self.image.get_rect()               # 宣告 rect 屬性為 image 的 rect 屬性
+        if self.anchor == Settings.GUI_TOPLEFT:         # 如果錨點位於左上角
+            self.rect.topleft = self.pos                # 就將錨點移到指定位置
+        elif self.anchor == Settings.GUI_TOPRIGHT:      # 如果錨點位於右上角
+            self.rect.topright = self.pos               # 就將錨點移到指定位置
+        elif self.anchor == Settings.GUI_BOTTOMLEFT:    # 如果錨點位於左下角
+            self.rect.bottomleft = self.pos             # 就將錨點移到指定位置
+        elif self.anchor == Settings.GUI_BOTTOMRIGHT:   # 如果錨點位於右下角
+            self.rect.bottomright = self.pos            # 就將錨點移到指定位置
+        elif self.anchor ==Settings.GUI_CENTER:         # 如果錨點位於中心
+            self.rect.center = self.pos                 # 就將錨點移到指定位置
     
