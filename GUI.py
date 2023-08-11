@@ -49,7 +49,7 @@ class Button:                   # 定義 Button 類別
             self.rect.center = self.pos                     # 就將錨點移到指定位置
         self.image.blit(self.msg_image, self.msg_image_rect)# 將 msg_image 繪製到 image 上
 
-    def is_click(self, mouse_action) -> bool:   # 定義按鈕被按下的函式
+    def is_click(self, mouse_action):   # 定義按鈕被按下的函式
         if mouse_action[0] and self.rect.collidepoint(mouse_action[1]):
                                                 # 如果滑鼠有被按下，且滑鼠位置位於 rect 中
             return True                         # 回傳 True
