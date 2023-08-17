@@ -3,10 +3,11 @@ import pygame
 
 import settings
 from sprites.bullet import Bullet
+from asset_loader import load_image
 
 class SpaceShip:                # 定義 Spaceship 類別
     def __init__(self, pos = (400, 500)):           # 定義建構函式
-        self.image = pygame.image.load("assets/spaceship.bmp")     # 載入 spaceship.bmp 作為 image 屬性
+        self.image = load_image("spaceship.bmp")     # 載入 spaceship.bmp 作為 image 屬性
         self.rect = self.image.get_rect()                   # 宣告 rect 屬性為 image 的 rect 屬性
         self.rect.center = pos                  # 將 rect 的 center 設定為 pos，預設為 (400, 500)
         self.bullets = pygame.sprite.Group()    # 宣告 bullets 為 Group 物件，儲存發射的子彈

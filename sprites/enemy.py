@@ -1,7 +1,9 @@
-import pygame                       # 引用 pygame 模組
-from pygame.sprite import Sprite    # 從 pygame.sprite 模組中引用 Sprite 類別
+import pygame
+from pygame.sprite import Sprite
+import random
+
 import settings
-import random                       # 引用 random 模組
+from asset_loader import load_image
 
 class Enemy(Sprite):                # 定義 Enemy 類別
 
@@ -13,7 +15,7 @@ class Enemy(Sprite):                # 定義 Enemy 類別
 
     def __init__(self):             # 定義建構函式
         super().__init__()          # 調用父類別的建構函式
-        self.image = pygame.image.load("assets/enemy.bmp")
+        self.image = load_image("enemy.bmp")
                                     # 載入 enemy.bmp 檔案作為 image 屬性
         self.rect = self.image.get_rect()
                                     # 宣告 rect 屬性為 image 的屬性
