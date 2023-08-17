@@ -1,11 +1,10 @@
 import math
+import pygame
 
-import pygame                   # 引用 pygame 模組
 import settings
-from sprites.bullet import Bullet       # 從 bullet 模組中引用 Bullet 類別
+from sprites.bullet import Bullet
 
 class SpaceShip:                # 定義 Spaceship 類別
-
     def __init__(self, pos = (400, 500)):           # 定義建構函式
         self.image = pygame.image.load("assets/spaceship.bmp")     # 載入 spaceship.bmp 作為 image 屬性
         self.rect = self.image.get_rect()                   # 宣告 rect 屬性為 image 的 rect 屬性
@@ -14,7 +13,6 @@ class SpaceShip:                # 定義 Spaceship 類別
         self.speed = settings.SHIP_SPEED        # 宣告 speed 屬性為 SHIP_SPEED，代表自機移動速度
         self.firecount = 0                      # 宣告 firecount 變數，代表開火冷卻時間
         self.life = settings.SHIP_LIVES         # 宣告 life 屬性
-    
 
     def update(self):                           # 定義更新函式
         if self.firecount > 0:                  # 如果開火冷卻大於 0 
@@ -23,7 +21,6 @@ class SpaceShip:                # 定義 Spaceship 類別
         for bullet in self.bullets:             # 對所有 bullets 中的 bullet
             if bullet.rect.bottom < 0:          # 如果 bullet 的底部碰到視窗上緣
                 self.bullets.remove(bullet)     # 就移除掉 bullet
-
 
         self.keypress = pygame.key.get_pressed()    # 宣告 keypress 屬性，儲存鍵盤狀態
         if self.keypress[settings.SLOW]:            # 如果慢速移動鍵被按著
