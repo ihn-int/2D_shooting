@@ -1,20 +1,15 @@
-import pygame.font              # 引用 pygame.font 模組
+import pygame.font
+
 import settings
 
-class Canvas:                   # 定義 Canvas 類別
+class Canvas:
+    def update(self):
+        pass
 
-    def __init__(self):         # 定義建構函式
-        pass                    # pass
+    def blit_on(self, screen):
+        pass
 
-    def update(self):           # 定義更新函式
-        pass                    # pass
-
-    def blit_on(self, screen):  # 定義繪製函式
-        pass                    # pass
-
-
-class Button:                   # 定義 Button 類別
-
+class Button:
     def __init__(self, msg, scale, pos, anchor,
                   button_color = settings.GUI_BUTTON_COLOR,
                   text_color = settings.GUI_BUTTON_TEXT_COLOR,
@@ -52,9 +47,7 @@ class Button:                   # 定義 Button 類別
                                                 # 如果滑鼠有被按下，且滑鼠位置位於 rect 中
             return True                         # 回傳 True
 
-
-class Label:                            # 定義 Label 類別
-
+class Label:
     def __init__(self, msg, pos, anchor,
                 text_color = settings.GUI_SCORE_FONT_COLOR,
                 font_size = settings.GUI_LABEL_FONT_SIZE):
