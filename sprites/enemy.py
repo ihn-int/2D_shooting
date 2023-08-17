@@ -13,7 +13,7 @@ class Enemy(Sprite):                # 定義 Enemy 類別
 
     def __init__(self):             # 定義建構函式
         super().__init__()          # 調用父類別的建構函式
-        self.image = pygame.image.load("enemy.bmp")
+        self.image = pygame.image.load("assets/enemy.bmp")
                                     # 載入 enemy.bmp 檔案作為 image 屬性
         self.rect = self.image.get_rect()
                                     # 宣告 rect 屬性為 image 的屬性
