@@ -20,7 +20,7 @@ class GameSceneCanvas(Canvas):
 
     def update(self, mouse_action, score, level, lives):
         if pygame.key.get_pressed()[settings.QUIT]: # 如果按下 QUIT 鍵
-            SceneManager.change_scene(SceneEnum.PAUSE)         # 就將場景切換為 pause_scene
+            SceneManager.push_scene(SceneEnum.PAUSE)         # 就將場景切換為 pause_scene
         self.score_board.msg = "score: " + str(score)   # 將 _score_board 的 msg 設為「score: <分數>」
         self.level_board.msg = "level: " + str(level)   # 將 _level_board 的 msg 設為「level: <等級>」
         self.lives_bar.msg = "lives: " + str(lives)     # 將 _lives_bar 的 msg 設為「lives: <剩餘生命>」
@@ -62,6 +62,15 @@ class GameScene(Scene):
         self.ship.rect.center = (400, 500)  # 將 ship 物件的 rect 物件的 center 設定為 (400, 500)
         self.enemies.empty()                # 清空當前敵人
         self.enemy_bullets.empty()
+
+    def pause(self) -> None:
+        pass
+
+    def resume(self) -> None:
+        pass
+
+    def exit(self) -> None:
+        pass
 
     def update(self, mouse_action):  # 定義 game_scene 的更新函式
         self.create_enemies()                   # 試圖產生一個敵人
@@ -114,4 +123,4 @@ class GameScene(Scene):
         self.lives -= 1             # 剩餘生命減 1 
         if self.lives <= 0:         # 如果剩餘生命小於等於 0
             print("Game Over")      # 列印出 Game Over 字樣
-            SceneManager.change_scene(SceneEnum.GAMEOVER)
+            SceneManager.push_scene(SceneEnum.GAMEOVER)

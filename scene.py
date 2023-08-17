@@ -9,6 +9,15 @@ class Scene:
     def init(self) -> None:
         pass
 
+    def pause(self) -> None:
+        pass
+
+    def resume(self) -> None:
+        pass
+
+    def exit(self) -> None:
+        pass
+
     def update(self) -> None:
         pass
 

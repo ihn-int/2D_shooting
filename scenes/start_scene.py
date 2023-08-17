@@ -14,7 +14,7 @@ class StartSceneCanvas(Canvas):
 
     def update(self, mouse_action):
         if self.play_button.is_click(mouse_action):       # 如果 play_button 被按下
-            SceneManager.change_scene(SceneEnum.GAME)
+            SceneManager.push_scene(SceneEnum.GAME)
         elif self.quit_button.is_click(mouse_action):     # 否則如果 quit_button 被按下
             print("QUIT")                                   # 列印出 QUIT 文字
             pygame.quit()                                   # 結束 pygame
@@ -30,6 +30,15 @@ class StartScene(Scene):
         self.canvas = StartSceneCanvas()
 
     def init(self) -> None:
+        pass
+
+    def pause(self) -> None:
+        pass
+
+    def resume(self) -> None:
+        pass
+
+    def exit(self) -> None:
         pass
 
     def update(self, mouse_action):             # 定義 start_scene 的更新函式

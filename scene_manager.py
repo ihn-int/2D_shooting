@@ -1,4 +1,6 @@
+import sys
 from enum import Enum
+import pygame
 
 from scene import Scene
 
@@ -27,13 +29,43 @@ class SceneManager:
             SceneEnum.PAUSE: PauseScene(),
             SceneEnum.GAMEOVER: GameoverScene()
         }
-        self.running_scene = SceneEnum.START
-    
-    def change_scene(next_scene: SceneEnum) -> None:
+
+    def init(scene: SceneEnum) -> None:
         instance = SceneManager.get_instance()
-        instance.running_scene = next_scene
-        instance.SCENES[instance.running_scene].init()
+        instance.state_stack = [scene]
+        SceneManager.get_scene().init()
+
+    def push_scene(scene: SceneEnum) -> None:
+        instance = SceneManager.get_instance()
+        SceneManager.get_scene().pause()
+        instance.state_stack.append(scene)
+        SceneManager.get_scene().init()
+
+    def pop_scene() -> None:
+        instance = SceneManager.get_instance()
+        SceneManager.get_scene().exit()
+        instance.state_stack.pop()
+        if len(instance.state_stack) == 0:
+            pygame.quit()
+            sys.exit(0)
+        SceneManager.get_scene().resume()
+
+    def override_scene(scene: SceneEnum) -> None:
+        instance = SceneManager.get_instance()
+        SceneManager.get_scene().exit()
+        instance.state_stack.pop()
+        while len(instance.state_stack) != 0:
+            s = SceneManager.get_scene()
+            s.resume()
+            s.exit()
+            instance.state_stack.pop()
+        instance.state_stack = [scene]
+        SceneManager.get_scene().init()
+
+    def restart_scene() -> None:
+        SceneManager.get_scene().exit()
+        SceneManager.get_scene().init()
 
     def get_scene() -> Scene:
         instance = SceneManager.get_instance()
-        return instance.SCENES[instance.running_scene]
+        return instance.SCENES[instance.state_stack[-1]]

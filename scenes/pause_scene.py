@@ -15,9 +15,11 @@ class PauseSceneCanvas(Canvas):
 
     def update(self, mouse_action):
         if self.resume_button.is_click(mouse_action):
-            SceneManager.change_scene(SceneEnum.GAME)
+            SceneManager.pop_scene()
+            return
         if self.menu_button.is_click(mouse_action):
-            SceneManager.change_scene(SceneEnum.START)
+            SceneManager.override_scene(SceneEnum.START)
+            return
 
     def blit_on(self, screen):
         screen.blit(self.resume_button.image, self.resume_button.rect)
@@ -30,6 +32,15 @@ class PauseScene(Scene):
         self.canvas = PauseSceneCanvas()
         
     def init(self) -> None:
+        pass
+
+    def pause(self) -> None:
+        pass
+
+    def resume(self) -> None:
+        pass
+
+    def exit(self) -> None:
         pass
 
     def update(self, mouse_action):
