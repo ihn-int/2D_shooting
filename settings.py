@@ -21,12 +21,16 @@ KEY_ENTER = pygame.K_RETURN                   # 確認鍵設定為 enter
 KEY_FIRE = pygame.K_SPACE                     # 攻擊鍵設定為空白鍵
 KEY_SLOW = pygame.K_LSHIFT                    # 慢速鍵設定為左側 shift
 
+SHIP_HP = 1000
 SHIP_SPEED = 10                    # 自機移動速度 10
 SHIP_SLOW_SPEED = 5                # 自機慢速移動速度 10
 SHIP_COOLDOWN = 5                  # 自機開火冷卻 20
 SHIP_LIVES = 3                     # 自機初始生命值 3
 SHIP_COLLIDE_RADIUS = 25
 SHIP_GRAZE_RADIUS = 45
+SHIP_HP_INDICATOR_RADIUS = 30
+SHIP_HP_INDICATOR_WIDTH = 3
+SHIP_HP_INDICATOR_ANGLE = 120
 SHIP_COLLISION_INDICATOR_WIDTH = 1
 
 BULLET_SPEED = 30                  # 子彈飛行速度 30
@@ -39,6 +43,8 @@ ENEMY_SPAWN_TIME = 40                      # 產生敵人的時間間隔
 ENEMY_BOARD = 10                           # 產生敵人的範圍的左右兩側與視窗邊緣距離
 ENEMY_SCORE = 100                          # 敵人被命中的分數
 ENEMY_COLLIDE_RADIUS = 30
+ENEMY_COLLIDE_DAMAGE = 1000
+ENEMY_BULLET_DAMAGE = 150
 
 GUI_TOPLEFT = "TOPLEFT"                    # 宣告 TOPLEFT 常數
 GUI_TOPRIGHT = "TOPRIGHT"                  # 宣告 TOPRIGHT 常數
