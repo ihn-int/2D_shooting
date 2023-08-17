@@ -1,5 +1,7 @@
+import math
+
 import pygame                   # 引用 pygame 模組
-from setting import Settings    # 從 setting 模組中引用 Settings 類別
+import settings
 from bullet import Bullet       # 從 bullet 模組中引用 Bullet 類別
 
 class SpaceShip:                # 定義 Spaceship 類別
@@ -9,9 +11,9 @@ class SpaceShip:                # 定義 Spaceship 類別
         self.rect = self.image.get_rect()                   # 宣告 rect 屬性為 image 的 rect 屬性
         self.rect.center = pos                  # 將 rect 的 center 設定為 pos，預設為 (400, 500)
         self.bullets = pygame.sprite.Group()    # 宣告 bullets 為 Group 物件，儲存發射的子彈
-        self.speed = Settings.SHIP_SPEED        # 宣告 speed 屬性為 SHIP_SPEED，代表自機移動速度
+        self.speed = settings.SHIP_SPEED        # 宣告 speed 屬性為 SHIP_SPEED，代表自機移動速度
         self.firecount = 0                      # 宣告 firecount 變數，代表開火冷卻時間
-        self.life = Settings.SHIP_LIVES         # 宣告 life 屬性
+        self.life = settings.SHIP_LIVES         # 宣告 life 屬性
     
 
     def update(self):                           # 定義更新函式
@@ -24,27 +26,32 @@ class SpaceShip:                # 定義 Spaceship 類別
 
 
         self.keypress = pygame.key.get_pressed()    # 宣告 keypress 屬性，儲存鍵盤狀態
-        if self.keypress[Settings.SLOW]:            # 如果慢速移動鍵被按著
-            self.speed = Settings.SHIP_SLOW_SPEED   # 就將移動速度調慢
+        if self.keypress[settings.SLOW]:            # 如果慢速移動鍵被按著
+            self.speed = settings.SHIP_SLOW_SPEED   # 就將移動速度調慢
         else:                                       # 否則
-            self.speed = Settings.SHIP_SPEED        # 移動速度調快
+            self.speed = settings.SHIP_SPEED        # 移動速度調快
 
-        if self.keypress[Settings.RIGHT] and self.rect.right < Settings.SCREEN_WIDTH - Settings.SCREEN_BOARD:                               # 如果向右鍵被按著，且沒有移動到邊界
+        if self.keypress[settings.RIGHT] and self.rect.right < settings.SCREEN_WIDTH - settings.SCREEN_BOARD:                               # 如果向右鍵被按著，且沒有移動到邊界
             self.rect.x += self.speed               # 就將 x 座標增加
             
-        if self.keypress[Settings.LEFT] and self.rect.left > Settings.SCREEN_BOARD:
+        if self.keypress[settings.LEFT] and self.rect.left > settings.SCREEN_BOARD:
                                                     # 如果向左鍵被按著，且沒有移動到邊界
             self.rect.x -= self.speed               # 就將 x 座標減少
 
-        if self.keypress[Settings.UP] and self.rect.top > 0:
+        if self.keypress[settings.UP] and self.rect.top > 0:
                                                     # 如果向上鍵被按著，且沒有移動到邊界
             self.rect.y -= self.speed               # 就將 y 座標減少
 
-        if self.keypress[Settings.DOWN] and self.rect.bottom < Settings.SCREEN_HEIGHT - Settings.SCREEN_BOARD:                      # 如果向下鍵被按著，且沒有移動到邊界
+        if self.keypress[settings.DOWN] and self.rect.bottom < settings.SCREEN_HEIGHT - settings.SCREEN_BOARD:                      # 如果向下鍵被按著，且沒有移動到邊界
             self.rect.y += self.speed               # 就將 y 座標增加
 
-        if self.keypress[Settings.FIRE] and self.firecount == 0:
+        if self.keypress[settings.FIRE] and self.firecount == 0:
                                                     # 如果攻擊鍵被按著，且開火冷卻為 0
             bullet = Bullet(self.rect)              # 宣告 bullet 變數為 Bullet 物件
             self.bullets.add(bullet)                # 將 bullet 加入到 bullets 當中
-            self.firecount = Settings.SHIP_COOLDOWN # 重置開火冷卻
+            v = settings.BULLET_SPEED
+            vx = math.sin(math.pi / 20) * v
+            vy = math.cos(math.pi / 20) * v
+            self.bullets.add(Bullet(self.rect, (vx, -vy)))
+            self.bullets.add(Bullet(self.rect, (-vx, -vy)))
+            self.firecount = settings.SHIP_COOLDOWN # 重置開火冷卻

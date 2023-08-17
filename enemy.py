@@ -1,6 +1,6 @@
 import pygame                       # 引用 pygame 模組
 from pygame.sprite import Sprite    # 從 pygame.sprite 模組中引用 Sprite 類別
-from setting import Settings        # 從 setting 模組中引用 Settings 類別
+import settings
 import random                       # 引用 random 模組
 
 class Enemy(Sprite):                # 定義 Enemy 類別
@@ -18,11 +18,11 @@ class Enemy(Sprite):                # 定義 Enemy 類別
         self.rect = self.image.get_rect()
                                     # 宣告 rect 屬性為 image 的屬性
 
-        self.rect.x = random.randrange(Settings.ENEMY_BOARD, Settings.SCREEN_WIDTH - self.rect.width - Settings.ENEMY_BOARD)
+        self.rect.x = random.randrange(settings.ENEMY_BOARD, settings.SCREEN_WIDTH - self.rect.width - settings.ENEMY_BOARD)
                                     # 將 rect 屬性的 x 設定為介於視窗大小之間的隨機數
         self.rect.y = self.rect.height
                                     # 將 rect 屬性的 y 設定為 height
 
     def update(self):               # 定義更新函式
-        self.rect.y += Settings.ENEMY_SPEED * Enemy.speed
+        self.rect.y += settings.ENEMY_SPEED * Enemy.speed
                                     # 將 rect 屬性的 y 增加 <ENEMY_SPEED * speed 屬性>
