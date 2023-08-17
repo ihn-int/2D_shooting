@@ -1,4 +1,5 @@
 import sys
+import math
 import pygame
 from pygame.locals import *
 
@@ -11,6 +12,8 @@ from sprites.ship import SpaceShip
 from sprites.enemy import Enemy
 from sprites.enemy_bullet_tracking import EnemyBulletTracking
 Enemy.speed_init()
+
+BLACK = (0, 0, 0)
 
 class GameSceneCanvas(Canvas):
     def __init__(self):
@@ -35,6 +38,9 @@ class GameSceneCanvas(Canvas):
         screen.blit(_score_board.image, _score_board.rect)  # 繪製 _score_board
         screen.blit(_level_board.image, _level_board.rect)  # 繪製 _level_board
         screen.blit(_lives_bar.image, _lives_bar.rect)      # 繪製 _lives__bar
+
+def circle_collide_predicate(r):
+    return lambda x, y: math.hypot(x.rect.centerx - y.rect.centerx, x.rect.centery - y.rect.centery) < r
 
 class GameScene(Scene):
     def __init__(self):
@@ -87,11 +93,17 @@ class GameScene(Scene):
             self.score += settings.ENEMY_SCORE  # 分數增加
             self.canvas.score_board._prep_label()
                                                 # 更新一次 score_board 的文字
-        if pygame.sprite.spritecollideany(self.ship, self.enemies):
-                                                # 如果 ship 碰到了 enemies 中的任一物件
-            self.on_hit()                       # 調用自己的 on_hit 函式
-        if pygame.sprite.spritecollideany(self.ship, self.enemy_bullets):
+        collided_enemy = pygame.sprite.spritecollideany(self.ship, self.enemies, circle_collide_predicate(settings.SHIP_COLLIDE_RADIUS + settings.ENEMY_COLLIDE_RADIUS))
+        if collided_enemy != None:
+            collided_enemy.kill()
             self.on_hit()
+        collided_bullet = pygame.sprite.spritecollideany(self.ship, self.enemy_bullets, circle_collide_predicate(settings.SHIP_COLLIDE_RADIUS + settings.BULLET_RADIUS))
+        if collided_bullet != None:
+            collided_bullet.kill()
+            self.on_hit()
+        grazed_bullet = pygame.sprite.spritecollideany(self.ship, self.enemy_bullets, circle_collide_predicate(settings.SHIP_GRAZE_RADIUS + settings.BULLET_RADIUS))
+        if grazed_bullet != None:
+            pass
         if self.score >= self.level * settings.LEVEL_GAP:
                                                 # 如果分數足以提升等級
             self.level += 1                     # 等級加 1
@@ -102,7 +114,9 @@ class GameScene(Scene):
     def blit_on(self, screen):       # 定義 game_scene 的繪製函式
         screen.fill(settings.BACKGROUND_COLOR)  # 清空畫面中所有內容
         screen.blit(self.ship.image, self.ship.rect)
-                                                # 繪製 ship 
+        if pygame.key.get_pressed()[settings.SLOW]:
+            pygame.draw.circle(screen, BLACK, self.ship.rect.center, settings.SHIP_COLLIDE_RADIUS, settings.SHIP_COLLISION_INDICATOR_WIDTH)
+            pygame.draw.circle(screen, BLACK, self.ship.rect.center, settings.SHIP_GRAZE_RADIUS, settings.SHIP_COLLISION_INDICATOR_WIDTH)
         self.ship.bullets.draw(screen)          # 繪製 bullets
         self.enemies.draw(screen)               # 繪製 enemies
         self.enemy_bullets.draw(screen)

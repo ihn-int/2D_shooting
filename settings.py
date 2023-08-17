@@ -25,6 +25,9 @@ SHIP_SPEED = 10                    # 自機移動速度 10
 SHIP_SLOW_SPEED = 5                # 自機慢速移動速度 10
 SHIP_COOLDOWN = 5                  # 自機開火冷卻 20
 SHIP_LIVES = 3                     # 自機初始生命值 3
+SHIP_COLLIDE_RADIUS = 25
+SHIP_GRAZE_RADIUS = 45
+SHIP_COLLISION_INDICATOR_WIDTH = 1
 
 BULLET_SPEED = 30                  # 子彈飛行速度 30
 ENEMY_BULLET_SPEED = 6
@@ -35,6 +38,7 @@ ENEMY_SPEED = 2                            # 敵人移動速度 2
 ENEMY_SPAWN_TIME = 40                      # 產生敵人的時間間隔
 ENEMY_BOARD = 10                           # 產生敵人的範圍的左右兩側與視窗邊緣距離
 ENEMY_SCORE = 100                          # 敵人被命中的分數
+ENEMY_COLLIDE_RADIUS = 30
 
 GUI_TOPLEFT = "TOPLEFT"                    # 宣告 TOPLEFT 常數
 GUI_TOPRIGHT = "TOPRIGHT"                  # 宣告 TOPRIGHT 常數
