@@ -30,7 +30,7 @@ SHIP_GRAZE_RADIUS = 45
 SHIP_COLLISION_INDICATOR_WIDTH = 1
 
 BULLET_SPEED = 30                  # 子彈飛行速度 30
-ENEMY_BULLET_SPEED = 6
+ENEMY_BULLET_SPEED = 8
 BULLET_RADIUS = 6                  # 子彈半徑 6px
 BULLET_COLOR = (60, 60, 60)        # 子彈顏色深灰色（60, 60, 60）
 
