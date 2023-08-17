@@ -1,4 +1,4 @@
-from pygame.locals import *
+import pygame
 
 SCREEN_WIDTH = 800                 # 視窗寬度設為 800px
 SCREEN_HEIGHT = 600                # 視窗高度設為 600px
@@ -12,14 +12,14 @@ STATUS_GAME_OVER = "GAMEOVER"      # 宣告 STATUS_GAME_OVER 常數
 STATUS_PUASE = "PAUSE"             # 宣告 STATUS_PAUSE 常數
 LEVEL_GAP = 1000                   # 每 1000 分提升 1 等
 
-UP = K_UP                          # 向上鍵設定為方向鍵上
-DOWN = K_DOWN                      # 向下鍵設定為方向鍵下
-RIGHT = K_RIGHT                    # 向右鍵設定為方向鍵右
-LEFT = K_LEFT                      # 向左鍵設定為方向鍵左
-QUIT = K_ESCAPE                    # 終止鍵設定為 esc
-ENTER = K_RETURN                   # 確認鍵設定為 enter
-FIRE = K_SPACE                     # 攻擊鍵設定為空白鍵
-SLOW = K_LSHIFT                    # 慢速鍵設定為左側 shift
+KEY_UP = pygame.K_UP                          # 向上鍵設定為方向鍵上
+KEY_DOWN = pygame.K_DOWN                      # 向下鍵設定為方向鍵下
+KEY_RIGHT = pygame.K_RIGHT                    # 向右鍵設定為方向鍵右
+KEY_LEFT = pygame.K_LEFT                      # 向左鍵設定為方向鍵左
+KEY_QUIT = pygame.K_ESCAPE                    # 終止鍵設定為 esc
+KEY_ENTER = pygame.K_RETURN                   # 確認鍵設定為 enter
+KEY_FIRE = pygame.K_SPACE                     # 攻擊鍵設定為空白鍵
+KEY_SLOW = pygame.K_LSHIFT                    # 慢速鍵設定為左側 shift
 
 SHIP_SPEED = 10                    # 自機移動速度 10
 SHIP_SLOW_SPEED = 5                # 自機慢速移動速度 10

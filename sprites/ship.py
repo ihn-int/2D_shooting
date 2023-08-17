@@ -23,26 +23,26 @@ class SpaceShip:                # 定義 Spaceship 類別
                 self.bullets.remove(bullet)     # 就移除掉 bullet
 
         self.keypress = pygame.key.get_pressed()    # 宣告 keypress 屬性，儲存鍵盤狀態
-        if self.keypress[settings.SLOW]:            # 如果慢速移動鍵被按著
+        if self.keypress[settings.KEY_SLOW]:            # 如果慢速移動鍵被按著
             self.speed = settings.SHIP_SLOW_SPEED   # 就將移動速度調慢
         else:                                       # 否則
             self.speed = settings.SHIP_SPEED        # 移動速度調快
 
-        if self.keypress[settings.RIGHT] and self.rect.right < settings.SCREEN_WIDTH - settings.SCREEN_BOARD:                               # 如果向右鍵被按著，且沒有移動到邊界
+        if self.keypress[settings.KEY_RIGHT] and self.rect.right < settings.SCREEN_WIDTH - settings.SCREEN_BOARD:                               # 如果向右鍵被按著，且沒有移動到邊界
             self.rect.x += self.speed               # 就將 x 座標增加
             
-        if self.keypress[settings.LEFT] and self.rect.left > settings.SCREEN_BOARD:
+        if self.keypress[settings.KEY_LEFT] and self.rect.left > settings.SCREEN_BOARD:
                                                     # 如果向左鍵被按著，且沒有移動到邊界
             self.rect.x -= self.speed               # 就將 x 座標減少
 
-        if self.keypress[settings.UP] and self.rect.top > 0:
+        if self.keypress[settings.KEY_UP] and self.rect.top > 0:
                                                     # 如果向上鍵被按著，且沒有移動到邊界
             self.rect.y -= self.speed               # 就將 y 座標減少
 
-        if self.keypress[settings.DOWN] and self.rect.bottom < settings.SCREEN_HEIGHT - settings.SCREEN_BOARD:                      # 如果向下鍵被按著，且沒有移動到邊界
+        if self.keypress[settings.KEY_DOWN] and self.rect.bottom < settings.SCREEN_HEIGHT - settings.SCREEN_BOARD:                      # 如果向下鍵被按著，且沒有移動到邊界
             self.rect.y += self.speed               # 就將 y 座標增加
 
-        if self.keypress[settings.FIRE] and self.firecount == 0:
+        if self.keypress[settings.KEY_FIRE] and self.firecount == 0:
                                                     # 如果攻擊鍵被按著，且開火冷卻為 0
             bullet = Bullet(self.rect)              # 宣告 bullet 變數為 Bullet 物件
             self.bullets.add(bullet)                # 將 bullet 加入到 bullets 當中

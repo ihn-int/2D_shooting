@@ -22,7 +22,7 @@ class GameSceneCanvas(Canvas):
         self.lives_bar = Label("lives:", (790, 130), settings.GUI_TOPRIGHT)
 
     def update(self, mouse_action, score, level, lives):
-        if pygame.key.get_pressed()[settings.QUIT]: # 如果按下 QUIT 鍵
+        if pygame.key.get_pressed()[settings.KEY_QUIT]: # 如果按下 QUIT 鍵
             SceneManager.push_scene(SceneEnum.PAUSE)         # 就將場景切換為 pause_scene
         self.score_board.msg = "score: " + str(score)   # 將 _score_board 的 msg 設為「score: <分數>」
         self.level_board.msg = "level: " + str(level)   # 將 _level_board 的 msg 設為「level: <等級>」
@@ -114,7 +114,7 @@ class GameScene(Scene):
     def blit_on(self, screen):       # 定義 game_scene 的繪製函式
         screen.fill(settings.BACKGROUND_COLOR)  # 清空畫面中所有內容
         screen.blit(self.ship.image, self.ship.rect)
-        if pygame.key.get_pressed()[settings.SLOW]:
+        if pygame.key.get_pressed()[settings.KEY_SLOW]:
             pygame.draw.circle(screen, BLACK, self.ship.rect.center, settings.SHIP_COLLIDE_RADIUS, settings.SHIP_COLLISION_INDICATOR_WIDTH)
             pygame.draw.circle(screen, BLACK, self.ship.rect.center, settings.SHIP_GRAZE_RADIUS, settings.SHIP_COLLISION_INDICATOR_WIDTH)
         self.ship.bullets.draw(screen)          # 繪製 bullets
