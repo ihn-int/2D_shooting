@@ -9,6 +9,7 @@ pygame.init()
 
 clock = pygame.time.Clock()
 screen = pygame.display.set_mode((settings.SCREEN_WIDTH, settings.SCREEN_HEIGHT))
+pygame.display.set_caption(settings.SCREEN_CAPTION)
 
 SceneManager.change_scene(SceneEnum.START)
 

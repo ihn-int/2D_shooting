@@ -2,6 +2,7 @@ from pygame.locals import *
 
 SCREEN_WIDTH = 800                 # 視窗寬度設為 800px
 SCREEN_HEIGHT = 600                # 視窗高度設為 600px
+SCREEN_CAPTION = "咻咻碰碰碰"
 SCREEN_BOARD = 10                  # 與視窗邊緣間隔 10px
 BACKGROUND_COLOR = (230, 230, 230) # 背景顏色設為淺灰色（230, 230, 230）
 FPS = 60                           # FPS 設為 60
