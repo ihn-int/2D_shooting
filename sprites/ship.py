@@ -2,7 +2,7 @@ import math
 
 import pygame                   # 引用 pygame 模組
 import settings
-from bullet import Bullet       # 從 bullet 模組中引用 Bullet 類別
+from sprites.bullet import Bullet       # 從 bullet 模組中引用 Bullet 類別
 
 class SpaceShip:                # 定義 Spaceship 類別
 

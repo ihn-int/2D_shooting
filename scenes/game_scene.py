@@ -7,9 +7,9 @@ from scene import Scene
 from scene_manager import SceneEnum, SceneManager
 from GUI import *
 
-from ship import SpaceShip
-from enemy import Enemy
-from enemy_bullet_tracking import EnemyBulletTracking
+from sprites.ship import SpaceShip
+from sprites.enemy import Enemy
+from sprites.enemy_bullet_tracking import EnemyBulletTracking
 Enemy.speed_init()
 
 class GameSceneCanvas(Canvas):
