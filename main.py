@@ -13,6 +13,12 @@ pygame.display.set_caption(settings.SCREEN_CAPTION)
 
 SceneManager.init(SceneEnum.START)
 
+try:
+    import pyi_splash
+    pyi_splash.close()
+except:
+    pass
+
 def check_event():
     for event in pygame.event.get():
         if event.type == QUIT:
