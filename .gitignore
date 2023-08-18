@@ -1,3 +1,10 @@
+# Python
 __pycache__
+
+# Editor
 .vscode
 .nvimlog
+
+# PyInstaller Build Files
+build
+dist
